@@ -15,14 +15,14 @@ public class CharacterController : MonoBehaviour
     Transform myTransform;
 
     private int aniMovingHash;
-
+    private Rigidbody2D myRBody;
     // Use this for initialization
     void Start()
     {
         myTransform = GetComponent<Transform>();
+        myRBody = GetComponent<Rigidbody2D>();
         //cache the animation hashes
         aniMovingHash = Animator.StringToHash("Moving");
-
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class CharacterController : MonoBehaviour
 
     void Move()
     {
-        Vector3 direction = Vector3.zero;
+        Vector2 direction = Vector2.zero;
         bool moved = ((Input.GetKey(KeyCode.W)) || (Input.GetKey(KeyCode.S)) || (Input.GetKey(KeyCode.A)) || (Input.GetKey(KeyCode.D)));
         if (Input.GetKey(KeyCode.W)) //up
         {
@@ -57,8 +57,21 @@ public class CharacterController : MonoBehaviour
         if (moved)
         {
             direction.Normalize();
-            myTransform.position += (direction * moveSpeed * Time.deltaTime);
-        } 
+            myRBody.velocity = (direction * moveSpeed);
 
+        }
+        else
+            myRBody.velocity = Vector2.zero;
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        //Debug.Log("ENTER");
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        //Debug.Log("STAY");
+    }
+
 }
